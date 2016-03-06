@@ -1,0 +1,1 @@
+These features are extracted using 'CNN_featureExtractor_simpleNN'

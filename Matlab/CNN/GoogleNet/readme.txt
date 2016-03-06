@@ -1,0 +1,1 @@
+The features are extracted using GoogleNet's ImageNet competition CNN's second-last layer 'cls3-pool'. 

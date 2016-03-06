@@ -1,0 +1,42 @@
+http://cs231n.github.io/transfer-learning/
+Transfer learning - use ConvNet as an initialization or a fixed feature extractor for the task of interest
+
+1. ConvNet as fixed feature extractor
+	- take a ConvNet pretrained on ImageNet, remove the last layer that contains the output for 1000 class scores
+	- Treat the rest of the ConvNet as a fixed feature extractor for the new dataset
+	- The ConvNet will compute a 4096-D vector for every image that contains the activations of the hidden layer immediately before the classifier (CNN codes)
+	- Ensure that the codes are ReLUd (thresholded at zero)
+	- Train a linear classifier (Linear SVM or Softmax) for the new dataset
+
+2. Fine-tuning the ConvNet
+	- replace and retrain the classifier on top of the ConvNet on the new dataset
+	- fine-tune the weights of the pretrained network by continuting backpropogation
+	- optional to choose to keep some layers fixed and only fine tune higher-level portion of the network (early layers contain generic features, later layers are more specific to the original dataset)
+
+
+Deciding on which Transfer Learning to use
+1. New dataset is small, and similar to original dataset ---> Linear classifier on CNN codes
+2. New dataset is large and similar to original dataset ---> more confidence to fine-tune through the full network
+3. Net dataset is small but very different from the original dataset ---> train SVM classifier from activations somewhere earlier in the network
+4. New dataset is large and very different ---> fine-tune through the entire network
+
+Transfer Learning Constraints:
+- premodels constrain the architecture (padding, strides etc...)
+- we assume the ConvNet weights are good, we don't want to distort them quickly or too much. USE SMALL LEARNING RATES!!
+
+
+To Do:
+- Use GoogleNet, change the last layer to SVM
+- Compare it with the original Softmax
+√ Show the intermediate filters/outputs
+
+
+Benchmark:
+90 classes - top 1 (accuracy 76%)
+
+
+
+Additional References
+- CNN Features off-the-shelf: an Astounding Baseline for Recognition trains SVMs on features from ImageNet-pretrained ConvNet and reports several state of the art results.
+- DeCAF reported similar findings in 2013. The framework in this paper (DeCAF) was a Python-based precursor to the C++ Caffe library.
+- How transferable are features in deep neural networks? studies the transfer learning performance in detail, including some unintuitive findings about layer co-adaptations.
