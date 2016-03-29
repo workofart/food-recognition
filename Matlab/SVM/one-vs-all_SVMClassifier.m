@@ -1,3 +1,4 @@
+%% SVM Classifier that uses one-vs-all for multiclass classification
 clear;
 
 % load ../cifar-10-batches-mat/data_batch_1.mat % cifar-10 data
@@ -15,10 +16,11 @@ clear;
 % F_Test = double(data(numTrain+1:numTrain+numTest, :));
 % T_Test = double(labels(numTrain+1:numTrain+numTest));
 
+%% Must load extracted features
 % imgDataExtractionv1_edge; % get img data w/ edge extraction
+% imgDataExtractionv1_surf; % get img data w/ surf extraction
 
-imgDataExtractionv1_surf; % get img data w/ surf extraction
-
+%% Train SVM classifier
 numLabels = max(T_Train);
 model = cell(numLabels,1);
 
@@ -46,7 +48,7 @@ end
 %            SVs: [835x1 double]      %
 % % % % % % % % % % % % % % % % % % % %
 
-% Predict Training Data
+%% Predict Test Data
 % model{j}.Label == 1 means the current image is predicted to be in class j
 p = zeros(numTest*numSets, numLabels);
 for j=1:numLabels

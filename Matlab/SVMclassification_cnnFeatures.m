@@ -4,20 +4,61 @@ clear;
 load 'CNN/GoogleNet/appleFeat.mat';
 load 'CNN/GoogleNet/burgerFeat.mat';
 load 'CNN/GoogleNet/coffeeFeat.mat';
-load 'CNN/GoogleNet/donutsFeat.mat';
 load 'CNN/GoogleNet/french_friesFeat.mat';
+load 'CNN/GoogleNet/donutsFeat.mat';
 load 'CNN/GoogleNet/fried_riceFeat.mat';
 load 'CNN/GoogleNet/ice_creamFeat.mat';
 load 'CNN/GoogleNet/ramenFeat.mat';
 load 'CNN/GoogleNet/saladFeat.mat';
 load 'CNN/GoogleNet/sashimiFeat.mat';
 
+% [coeff, score, latent] = pca(appleFeat);
+% clear appleFeat;
+% appleFeat = score*coeff';
+% 
+% [coeff, score, latent] = pca(burgerFeat);
+% clear burgerFeat;
+% burgerFeat = score*coeff';
+% 
+% [coeff, score, latent] = pca(coffeeFeat);
+% clear coffeeFeat;
+% coffeeFeat = score*coeff';
+% 
+% [coeff, score, latent] = pca(french_friesFeat);
+% clear french_friesFeat;
+% french_friesFeat = score*coeff';
+% 
+% [coeff, score, latent] = pca(donutsFeat);
+% clear donutsFeat;
+% donutsFeat = score*coeff';
+% 
+% [coeff, score, latent] = pca(fried_riceFeat);
+% clear fried_riceFeat;
+% fried_riceFeat = score*coeff';
+% 
+% [coeff, score, latent] = pca(ice_creamFeat);
+% clear ice_creamFeat;
+% ice_creamFeat = score*coeff';
+% 
+% [coeff, score, latent] = pca(ramenFeat);
+% clear ramenFeat;
+% ramenFeat = score*coeff';
+% 
+% [coeff, score, latent] = pca(saladFeat);
+% clear saladFeat;
+% saladFeat = score*coeff';
+% 
+% [coeff, score, latent] = pca(sashimiFeat);
+% clear sashimiFeat;
+% sashimiFeat = score*coeff';
 
-numSample = 5000;
+
+
+numSample = 6000;
 numSets = 10; % total number of classes
 
 % make sure: numTrain + numTest = numSample/numSets
-numTrain = 350;
+numTrain = 450;
 numTest = 150;
 
 %%%%%%%%%%%%%%%% [trainingSets, validationSets] = partition(imgSets, 0.3, 'randomize');
@@ -102,7 +143,8 @@ F_Train = [appleSet(1:numTrain, :);
     fried_riceSet(1:numTrain, :);
     ramenSet(1:numTrain, :);
     saladSet(1:numTrain, :);
-    sashimiSet(1:numTrain, :)];
+    sashimiSet(1:numTrain, :)
+    ];
 
 F_Test = [appleSet((numTrain+1):(numSample/numSets), :);
     burgerSet((numTrain+1):(numSample/numSets), :);
@@ -113,7 +155,8 @@ F_Test = [appleSet((numTrain+1):(numSample/numSets), :);
     fried_riceSet((numTrain+1):(numSample/numSets), :);
     ramenSet((numTrain+1):(numSample/numSets), :);
     saladSet((numTrain+1):(numSample/numSets), :);
-    sashimiSet((numTrain+1):(numSample/numSets), :)];
+    sashimiSet((numTrain+1):(numSample/numSets), :)
+    ];
 
 % Storing labels for training data
 for k=1:numSets
@@ -142,35 +185,35 @@ randT_Test = T_Test(ordering, :);
 
 
 
-numLabels = max(T_Train);
-model = cell(numLabels,1);
-
-for k=1:numLabels
-    model{k} = svmtrain(double(T_Train == k), F_Train, '-b 1');
-end
-
-% Predict Training Data
-% model{j}.Label == 1 means the current image is predicted to be in class j
-p = zeros(numTest*numSets, numLabels);
-for j=1:numLabels
-    [pred_train, acc, prob] = svmpredict(double(T_Test == j), F_Test, model{j},'-b 1');
-    p(:, j) = prob(:, model{j}.Label==1); % Probability class = k
-end
-
-%  max(X, [], 1) - max of each column
-%  max(X, [], 2) - max of each row
-% Get the max of each row(sample), and return the index(class)
-[~, class] = max(p, [], 2);
-accuracy = sum(class == T_Test)/(numTest*numSets)
+% numLabels = max(T_Train);
+% model = cell(numLabels,1);
+% 
+% for k=1:numLabels
+%     model{k} = svmtrain(double(T_Train == k), F_Train, '-b 1');
+% end
+% 
+% % Predict Training Data
+% % model{j}.Label == 1 means the current image is predicted to be in class j
+% p = zeros(numTest*numSets, numLabels);
+% for j=1:numLabels
+%     [pred_train, acc, prob] = svmpredict(double(T_Test == j), F_Test, model{j},'-b 1');
+%     p(:, j) = prob(:, model{j}.Label==1); % Probability class = k
+% end
+% 
+% %  max(X, [], 1) - max of each column
+% %  max(X, [], 2) - max of each row
+% % Get the max of each row(sample), and return the index(class)
+% [~, class] = max(p, [], 2);
+% accuracy = sum(class == T_Test)/(numTest*numSets)
 
 
 disp('=========================== Randomized =================');
-clear class p; % drop the previous result
+% clear class p; % drop the previous result
 numLabels = max(randT_Train);
 model = cell(numLabels,1);
 
 for k=1:numLabels
-    model{k} = svmtrain(double(randT_Train == k), randF_Train, '-b 1');
+    model{k} = svmtrain(double(randT_Train == k), randF_Train, '-c 32 -g 0.00097656 -b 1'); %#ok<SVMTRAIN>
 end
 
 % Predict Training Data
@@ -187,3 +230,20 @@ end
 [~, class] = max(p, [], 2);
 accuracy = sum(class == randT_Test)/(numTest*numSets)
 
+%%
+% #######################
+% Make confusion matrix for the overall classification
+% #######################
+[confusionMatrixAll,orderAll] = confusionmat(randT_Test,class);
+figure; imagesc(confusionMatrixAll');
+xlabel('actual class label');
+ylabel('predicted class label');
+title(['confusion matrix for overall classification']);
+% Calculate the overall accuracy from the overall predicted class label
+accuracyAll = trace(confusionMatrixAll)/(numSets*numTest);
+% disp(['Total accuracy from ',num2str(Ncv_classif),'-fold cross validation is ',num2str(accuracyAll*100),'%']);
+
+% Compare the actual and predicted class
+figure;
+subplot(1,2,1); imagesc(randT_Test); title('actual class');
+subplot(1,2,2); imagesc(class); title('predicted class');

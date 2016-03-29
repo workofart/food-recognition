@@ -8,9 +8,9 @@ function [CONF,err] = confusionMatrix(C,T)
 
 % i true class classified as j
 pos1 = find(T == 1); % i = 1, positions
-pos2 = find(T == -1); % i = 2, positions
+pos2 = find(T == 2); % i = 2, positions
 pos_1 = find(C == 1); % j = 1, positions
-pos_2 = find(C == -1); % j = 2, positions
+pos_2 = find(C == 2); % j = 2, positions
 
 C11 = length(intersect(pos1,pos_1)); % how many matches for i = 1, j = 1
 C12 = length(intersect(pos1,pos_2)); % how many matches for i = 1, j = 2

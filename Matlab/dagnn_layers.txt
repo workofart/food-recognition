@@ -1,0 +1,8 @@
+DATA = 224x224x3x256
+
+ADDLAYER(NAME, LAYER, INPUTS, OUTPUTS, PARAMS)
+NAME = 'objective'
+LAYER = 'dagnn.Loss('loss', 'softmaxlog')'
+INPUTS = 'cls3_fc'
+OUTPUTS = 'label'
+PARAMS = 'objective'
