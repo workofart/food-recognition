@@ -1,5 +1,5 @@
 # Food Image Recognition
-This respository is used for storing code that I used/implemented for my senior thesis. The full research report can be viewed [HERE](http://www.henrypan.com/other/Final\ Report_HanxiangPan.pdf).
+This respository is used for storing code that I used/implemented for my senior thesis. The full research report can be viewed [HERE](http://www.henrypan.com/other/Final_Report_HanxiangPan.pdf).
 
 ## Dependencies
 * All code are in [Matlab](http://www.mathworks.com/products/matlab/)
